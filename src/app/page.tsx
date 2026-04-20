@@ -345,7 +345,6 @@ export default function Home() {
                 controls
                 playsInline
                 preload="metadata"
-                poster={v.thumbnail}
               />
               
               {/* Floating Tag Overlay */}
