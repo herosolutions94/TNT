@@ -341,10 +341,12 @@ export default function Home() {
             <div className="relative w-full aspect-[9/16] bg-black">
               <video 
                 src={v.videoUrl} 
-                className="w-full h-full object-cover"
-                controls
-                playsInline
-                preload="metadata"
+                className="w-full h-full object-cover" 
+                autoPlay 
+                muted 
+                loop 
+                playsInline 
+                preload="metadata" 
               />
               
               {/* Floating Tag Overlay */}

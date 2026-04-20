@@ -1,4 +1,4 @@
-// File: /Users/imac/Downloads/tnt-landing/src/app/light/page.tsx
+// File: E:\TNT\src\app\light\page.tsx
 import * as entry from '../../../../src/app/light/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

@@ -242,7 +242,15 @@ export default function Home() {
               <ScrollReveal key={v.title} delay={i * 100}>
                 <div className="rounded-2xl overflow-hidden group flex flex-col bg-white border border-slate-200 shadow-sm">
                   <div className="relative w-full aspect-[9/16] bg-black">
-                    <video src={v.videoUrl} className="w-full h-full object-cover" controls playsInline preload="metadata" />
+                    <video 
+                      src={v.videoUrl} 
+                      className="w-full h-full object-cover" 
+                      autoPlay 
+                      muted 
+                      loop 
+                      playsInline 
+                      preload="metadata" 
+                    />
                     <span className="absolute top-3 left-3 px-2 py-1 rounded-md text-xs font-bold bg-emerald-500 text-white z-10">{v.tag}</span>
                   </div>
                   <div className="py-4 px-4">
