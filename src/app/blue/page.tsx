@@ -228,9 +228,95 @@ export default function Home() {
           </div>
         </div>
       </section>
+      {/* ── PRODUCT ── */}
+      <section id="product" className="py-28 px-6 md:px-16"
+        style={{ background: 'rgba(59, 131, 246, 0.08)' }}> {/* Subtle blue tint background */}
+        <div className="max-w-7xl mx-auto">
+          <ScrollReveal>
+            <p className="text-xs font-semibold tracking-widest uppercase mb-4" 
+              style={{ color: '#3B82F6' }}> {/* Primary Blue Accent */}
+              What We Build
+            </p>
+            <h2 className="font-display font-black text-5xl md:text-6xl mb-4" 
+                style={{ color: '#1a1a1a' }}> {/* Pure white for contrast */}
+              What Our Product<br />Actually Does
+            </h2>
+            <p className="text-lg mb-16 max-w-xl" 
+              style={{ color: 'rgba(37, 37, 37, 0.6)' }}> {/* Muted white/blue text */}
+              TNT is an AI-powered learning platform that makes studying fast, fun, and actually effective.
+            </p>
+          </ScrollReveal>
 
+          <div className="grid md:grid-cols-2 gap-6">
+            {productPoints.map((p, i) => (
+              <ScrollReveal key={p.n} delay={i * 120}>
+                <div className="card-glow rounded-2xl p-8 transition-all duration-300 hover:border-blue-500/50"
+                  style={{ 
+                    background: 'rgba(59, 130, 246, 0.04)', 
+                    border: '1px solid rgba(59, 130, 246, 0.15)' 
+                  }}>
+                  {/* Transparent Blue Number */}
+                  <span className="font-display font-black text-5xl mb-4 block" 
+                        style={{ color: 'rgba(59, 131, 246, 0.42)' }}>
+                    {p.n}
+                  </span>
+                  <h3 className="font-display font-bold text-xl mb-3" 
+                      style={{ color: '#252525' }}>
+                    {p.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed" 
+                    style={{ color: 'rgba(29, 29, 29, 0.5)' }}>
+                    {p.body}
+                  </p>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+      {/* ── COACHES ── */}
+      <section id="coaches" className="py-28" style={{ background: '#f8fafc' }}> {/* Slightly cleaner light blue-gray background */}
+        <div className="max-w-7xl mx-auto">
+          <div className="px-6 md:px-16 max-w-7xl mx-auto mb-14">
+            <ScrollReveal>
+              <p className="text-xs font-bold tracking-widest uppercase mb-4" style={{ color: '#3B82F6' }}>
+                Coaching
+              </p>
+              <h2 className="font-display font-black text-5xl md:text-6xl mb-4" style={{ color: '#0f172a' }}>
+                Content Coaches
+              </h2>
+              <p className="text-lg max-w-lg font-medium" style={{ color: '#64748b' }}>
+                Work with influencers to learn virality and improve as a creator.
+              </p>
+            </ScrollReveal>
+          </div>
+        </div>
+
+        {/* Infinite scroll row */}
+        <div className="relative overflow-hidden">
+          <div className="coaches-scroll flex gap-6">
+            {[...coaches, ...coaches].map((c, i) => (
+              <div key={i} className="shrink-0 w-52 rounded-3xl p-8 text-center transition-all border border-blue-100 bg-white shadow-sm hover:shadow-md">
+                <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center font-display font-black text-2xl shadow-inner"
+                  style={{ 
+                    // Generates different shades of professional blues
+                    background: `hsl(${210 + (i % 4) * 15}, 70%, 90%)`, 
+                    color: '#2563EB' 
+                  }}>
+                  {c.name[0]}
+                </div>
+                <p className="font-bold text-lg mb-1 text-slate-900">{c.name}</p>
+                <p className="text-xs font-black mb-1 uppercase tracking-wider" style={{ color: '#3B82F6' }}>
+                  {c.followers} Followers
+                </p>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-tighter">{c.platform}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
       {/* ── EXAMPLE VIDEOS ── */}
-      <section id="videos" className="py-28 px-6 md:px-16 bg-blue-50/60">
+      <section id="videos" className="py-28 px-6 md:px-16" style={{ background: 'rgba(59, 131, 246, 0.08)' }}>
         <div className="max-w-7xl mx-auto">
           <ScrollReveal>
             <p className="text-xs font-bold tracking-widest uppercase mb-4 text-blue-600">Proof of Work</p>
@@ -240,7 +326,7 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {videos.map((v, i) => (
               <ScrollReveal key={v.title} delay={i * 100}>
-                <div className="rounded-2xl overflow-hidden group flex flex-col bg-white border border-slate-200 shadow-sm">
+                <div className="rounded-2xl overflow-hidden group flex flex-col bg-white border h-full border-slate-200 shadow-sm">
                   <div className="relative w-full aspect-[9/16] bg-black">
                     <video 
                       src={v.videoUrl} 

@@ -334,7 +334,7 @@ export default function Home() {
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       {videos.map((v, i) => (
         <ScrollReveal key={v.title} delay={i * 100}>
-          <div className="card-glow rounded-2xl overflow-hidden group flex flex-col bg-transparent"
+          <div className="card-glow rounded-2xl overflow-hidden group flex flex-col bg-transparent h-full"
                style={{ border: '1px solid rgba(245,240,232,0.08)' }}>
             
             {/* Video Container - Vertical Reel Aspect Ratio */}
@@ -363,7 +363,7 @@ export default function Home() {
             </div>
 
             {/* Content below video - No background */}
-            <div className="py-4 px-1">
+            <div className="py-4 px-4">
               <p className="text-sm font-medium leading-snug" style={{ color: 'var(--brand-cream)' }}>
                 {v.title}
               </p>
