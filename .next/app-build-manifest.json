@@ -11,20 +11,10 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/light/page": [
+    "/apply/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/light/page.js"
-    ],
-    "/blue/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/blue/page.js"
-    ],
-    "/green/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/green/page.js"
+      "static/chunks/app/apply/page.js"
     ]
   }
 }

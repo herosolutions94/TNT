@@ -1,6 +1,4 @@
 {
-  "/page": "app/page.js",
-  "/light/page": "app/light/page.js",
-  "/blue/page": "app/blue/page.js",
-  "/green/page": "app/green/page.js"
+  "/apply/page": "app/apply/page.js",
+  "/page": "app/page.js"
 }
