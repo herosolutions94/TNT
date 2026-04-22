@@ -1,69 +1,100 @@
 'use client'
 import Link from 'next/link'
 import { useState } from 'react'
+import type { SiteSettings } from '@/lib/api'
+import { resolveStorageUrl } from '@/lib/api'
 
-export default function NavbarBlue() {
+interface NavbarProps {
+  siteSettings?: SiteSettings | null
+}
+
+export default function Navbar({ siteSettings }: NavbarProps) {
   const [open, setOpen] = useState(false)
 
+  const logoUrl = resolveStorageUrl(siteSettings?.site_logo)
+  const siteName = siteSettings?.site_name ?? 'TNT'
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 lg:px-12 py-5 transition-all duration-300"
-      style={{ 
-        background: 'rgba(255, 255, 255, 0.4)', 
-        backdropFilter: 'blur(12px)', 
-        borderBottom: '1px solid rgba(0, 0, 0, 0.05)' 
-      }}>
-      
+    <nav
+      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 lg:px-12 py-5 transition-all duration-300"
+      style={{
+        background: 'rgba(255, 255, 255, 0.4)',
+        backdropFilter: 'blur(12px)',
+        borderBottom: '1px solid rgba(0, 0, 0, 0.05)',
+      }}
+    >
       {/* Logo */}
-      <Link href="/" className="font-display font-black text-2xl tracking-tight shrink-0">
-        <img 
-          src="/images/logo.png" 
-          alt="TNT" 
-          width={100} 
-          height={100} 
-          style={{ 
-            borderRadius: '8px', 
-            filter: 'brightness(0)' 
-          }} 
-        />
+      <Link href="/" className="shrink-0">
+        {logoUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={logoUrl}
+            alt={siteName}
+            width={100}
+            height={40}
+            style={{ borderRadius: 8, filter: 'brightness(0)', objectFit: 'contain' }}
+          />
+        ) : (
+          <span className="font-display font-black text-2xl tracking-tight">{siteName}</span>
+        )}
       </Link>
 
-      {/* Nav Links - Switched from md:flex to lg:flex */}
-      <div className="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-bold" style={{ color: 'rgba(0, 0, 0, 0.6)' }}>
-        <a href="#the-job" className="hover:text-black transition-colors whitespace-nowrap">The Job</a>
-        <a href="#interns" className="hover:text-black transition-colors whitespace-nowrap">Interns</a>
-        <a href="#why-tnt" className="hover:text-black transition-colors whitespace-nowrap">Why TNT?</a>
-        <a href="#product" className="hover:text-black transition-colors whitespace-nowrap">Product</a>
-        <a href="#coaches" className="hover:text-black transition-colors whitespace-nowrap">Coaches</a>
+      {/* Desktop nav links */}
+      <div
+        className="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-bold"
+        style={{ color: 'rgba(0, 0, 0, 0.6)' }}
+      >
+        <a href="#the-job"  className="hover:text-black transition-colors whitespace-nowrap">The Job</a>
+        <a href="#interns"  className="hover:text-black transition-colors whitespace-nowrap">Interns</a>
+        <a href="#why-tnt"  className="hover:text-black transition-colors whitespace-nowrap">Why TNT?</a>
+        <a href="#product"  className="hover:text-black transition-colors whitespace-nowrap">Product</a>
+        <a href="#coaches"  className="hover:text-black transition-colors whitespace-nowrap">Coaches</a>
         <a href="#referrals" className="hover:text-black transition-colors whitespace-nowrap">Referrals</a>
       </div>
 
-      {/* Button - Switched from md:inline-flex to lg:inline-flex */}
-      <Link href="/apply"
+      {/* Desktop CTA */}
+      <Link
+        href="/apply"
         className="hidden lg:inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-blue-200"
-        style={{ background: '#3B82F6', color: '#fff' }}>
+        style={{ background: '#3B82F6', color: '#fff' }}
+      >
         Apply Now →
       </Link>
 
-      {/* Mobile Burger - Switched from md:hidden to lg:hidden */}
-      <button className="lg:hidden flex flex-col gap-1.5 p-2 z-50" onClick={() => setOpen(!open)} aria-label="Toggle menu">
+      {/* Mobile burger */}
+      <button
+        className="lg:hidden flex flex-col gap-1.5 p-2 z-50"
+        onClick={() => setOpen(!open)}
+        aria-label="Toggle menu"
+      >
         <span className={`block w-6 h-0.5 transition-all ${open ? 'rotate-45 translate-y-2' : ''}`} style={{ background: '#000' }} />
-        <span className={`block w-6 h-0.5 transition-all ${open ? 'opacity-0' : ''}`} style={{ background: '#000' }} />
+        <span className={`block w-6 h-0.5 transition-all ${open ? 'opacity-0' : ''}`}           style={{ background: '#000' }} />
         <span className={`block w-6 h-0.5 transition-all ${open ? '-rotate-45 -translate-y-2' : ''}`} style={{ background: '#000' }} />
       </button>
 
-      {/* Mobile Menu - Switched from md:hidden to lg:hidden */}
+      {/* Mobile menu */}
       {open && (
-        <div className="absolute top-0 left-0 right-0 min-h-screen flex flex-col items-center justify-center gap-8 lg:hidden shadow-xl"
-          style={{ background: 'rgba(255, 255, 255, 0.98)', borderBottom: '1px solid rgba(0, 0, 0, 0.05)' }}>
-          {['the-job','interns','why-tnt','product','coaches','referrals'].map(id => (
-            <a key={id} href={`#${id}`} onClick={() => setOpen(false)}
-              className="capitalize text-xl font-bold" style={{ color: 'rgba(0, 0, 0, 0.7)' }}>
+        <div
+          className="absolute top-0 left-0 right-0 min-h-screen flex flex-col items-center justify-center gap-8 lg:hidden shadow-xl"
+          style={{ background: 'rgba(255, 255, 255, 0.98)', borderBottom: '1px solid rgba(0, 0, 0, 0.05)' }}
+        >
+          {['the-job', 'interns', 'why-tnt', 'product', 'coaches', 'referrals'].map(id => (
+            <a
+              key={id}
+              href={`#${id}`}
+              onClick={() => setOpen(false)}
+              className="capitalize text-xl font-bold"
+              style={{ color: 'rgba(0, 0, 0, 0.7)' }}
+            >
               {id.replace('-', ' ')}
             </a>
           ))}
-          <Link href="/apply" onClick={() => setOpen(false)}
+          <Link
+            href="/apply"
+            onClick={() => setOpen(false)}
             className="mt-2 px-10 py-4 rounded-full text-lg font-bold shadow-lg shadow-blue-100"
-            style={{ background: '#3B82F6', color: '#fff' }}>
+            style={{ background: '#3B82F6', color: '#fff' }}
+          >
             Apply Now
           </Link>
         </div>

@@ -1,449 +1,710 @@
-import Link from 'next/link'
-import Navbar from '@/components/Navbar'
-import ScrollReveal from '@/components/ScrollReveal'
+"use client";
+
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
 /* ─── DATA ──────────────────────────────────────────────── */
 
-const jobPerks = [
-  { icon: '/images/icon1.png', title: 'We Build the Strategy. You Post the Content.', desc: 'Start your fresh TikTok journey today! Post once a day about Turbo AI, and we’ll handle the heavy lifting. Get exclusive access to viral blueprints and content ideas curated by our top-tier marketing team.' },
-  { icon: '/images/icon2.png', title: 'Master the Art of Viral Growth', desc: 'Collaborate directly with our founders and elite influencer network to master startup marketing. Refine your creative voice and learn the exact strategies used to scale brands from the ground up.' },
-  { icon: '/images/icon3.png', title: 'Turn Your Creativity into a Career', desc: 'Secure a base rate of $20+ per video and boost your earnings with performance-based rewards. Follow in the footsteps of our top creator who earned $20k in a single month by mastering our system.' },
-]
+const telegramPerks = [
+  { icon: "/images/new5.png", title: "Daily Viral Scripts", desc: "Get fresh content scripts every morning, curated by our top creators and marketing team." },
+  { icon: "/images/new6.png", title: "Live Analytics Drops", desc: "We share real numbers — what's working right now on TikTok, Reels, and Shorts." },
+  { icon: "/images/new7.png", title: "Exclusive Challenges", desc: "Monthly creator challenges with cash prizes up to $5,000 for top performers." },
+  { icon: "/images/new8.png", title: "Collab Matching", desc: "Get matched with other creators in your niche for duets and brand crossovers." },
+];
 
-const interns = [
-  { img: '/images/img1.jpg', name:'Aysha', outcome: 'Landed her dream marketing role at a Series B startup in Dubai.', tag: 'Full-time Hire', color: '#3B82F6' },
-  { img: '/images/img2.jpg', name:'Mubashra', outcome: 'Earned $18,000 in a single month from performance bonuses.', tag: '$18K Month', color: '#2563EB' },
-  { img: '/images/img3.jpg', name:'Johen', outcome: 'Grew from 0 content experience to 400K followers in 90 days.', tag: '400K Followers', color: '#60A5FA' },
-]
+const topGroups = [
+  { rank: 1, name: "Dubai Hustlers", members: 1240, earnings: "$84,200", growth: "+38%" },
+  { rank: 2, name: "EU Growth Pod", members: 980, earnings: "$61,500", growth: "+29%" },
+  { rank: 3, name: "Asia Pacific Crew", members: 870, earnings: "$53,100", growth: "+24%" },
+  { rank: 4, name: "US Content Lab", members: 760, earnings: "$44,800", growth: "+19%" },
+  { rank: 5, name: "LATAM Creators", members: 620, earnings: "$38,200", growth: "+16%" },
+];
 
-const whyItems = [
-  { emoji: '/images/icon4.png', title: 'Real Experience', desc: 'Marketing internship at a high-growth, venture-backed company — not just busy work.' },
-  { emoji: '/images/icon5.png', title: 'Maximize Your Income', desc: '$20 base per video + significant performance bonuses. Uncapped earning potential.' },
-  { emoji: '/images/icon6.png', title: 'The Viral Roadmap', desc: 'Our creators have driven 500M+ views. We teach you exactly how to replicate that.' },
-  { emoji: '/images/icon7.png', title: 'Strategic Creative Direction', desc: 'Free coaching from influencers with millions of followers across TikTok & YouTube.' },
-  { emoji: '/images/icon8.png', title: 'Collaborative Growth Ecosystem', desc: 'IRL events, global Slack community, and connections with hundreds of TNT creators.' },
-  { emoji: '/images/icon9.png', title: 'Startup Access', desc: 'Work directly with founders. Get a front-row seat to how a VC-backed company scales.' },
-]
+const crazyStories = [
+  { handle: "@maya.creates", avatar: "M", followers: "1.2M", story: "Went from a $9/hr barista to earning $22,000 in her third month. Her first viral video hit 4.7M views overnight.", tag: "$22K Month", tagColor: "#FF4D00" },
+  { handle: "@haris_tnt", avatar: "H", followers: "890K", story: "Dropped out of a corporate job, joined TNT. Built a 6-figure business around one niche in 5 months.", tag: "6-Figure Brand", tagColor: "#FF4D00" },
+  { handle: "@zara.vision", avatar: "Z", followers: "2.1M", story: "Landed a brand deal with a Fortune 500 company after TNT's coaching. Now runs her own agency of 12 people.", tag: "Agency Owner", tagColor: "#FF4D00" },
+  { handle: "@omar.clips", avatar: "O", followers: "540K", story: "Started with zero equipment, just a phone. Hit 100K followers in 30 days using our viral blueprint.", tag: "100K in 30 Days", tagColor: "#FF4D00" },
+  { handle: "@leila.tnt", avatar: "L", followers: "780K", story: "Single mom, part-time creator. Replaced her full-time salary in 8 weeks. Now coaches other moms.", tag: "Full Salary Replaced", tagColor: "#FF4D00" },
+  { handle: "@dev.studio", avatar: "D", followers: "430K", story: "Used TNT's system to build a media company. Raised $200K in pre-seed funding from content virality alone.", tag: "$200K Raised", tagColor: "#FF4D00" },
+];
 
-const productPoints = [
-  { n: '01', title: 'AI-Powered Learning', body: 'Our platform uses AI to personalise study plans, surface the right content, and help students learn 3× faster than traditional methods.' },
-  { n: '02', title: 'Bite-Size Video Lessons', body: 'Complex topics broken into 60-second TikTok-style clips that are actually fun to watch — made by real educators.' },
-  { n: '03', title: 'Live Progress Tracking', body: 'Students, parents, and tutors see real-time performance data so everyone knows exactly what needs work.' },
-  { n: '04', title: 'Exam-Ready in Weeks', body: 'Structured roadmaps that take students from confused to confident before their next big test.' },
-]
+const testimonialImages = [
+  { x: 5, y: 8, rotate: -3, scale: 1.0, zIndex: 3, color: "#FF4D00", initials: "FA", stars: 5, text: "Made $8K first month!", name: "Fatima A." },
+  { x: 22, y: 40, rotate: 2, scale: 0.95, zIndex: 1, color: "#FF6B35", initials: "JK", stars: 5, text: "300K followers in 60 days", name: "Jordan K." },
+  { x: 42, y: 12, rotate: -1, scale: 1.05, zIndex: 4, color: "#FF4D00", initials: "PM", stars: 5, text: "Got a full-time offer!", name: "Priya M." },
+  { x: 60, y: 45, rotate: 3, scale: 0.9, zIndex: 2, color: "#E63E00", initials: "SA", stars: 5, text: "Quit my 9-5 forever 🔥", name: "Sam A." },
+  { x: 75, y: 10, rotate: -2, scale: 1.0, zIndex: 5, color: "#FF4D00", initials: "RK", stars: 5, text: "$15K in month 2", name: "Raj K." },
+  { x: 2, y: 62, rotate: 1, scale: 0.92, zIndex: 2, color: "#FF6B35", initials: "ML", stars: 5, text: "Best decision of my life", name: "Maya L." },
+  { x: 30, y: 70, rotate: -4, scale: 1.0, zIndex: 3, color: "#FF4D00", initials: "HZ", stars: 5, text: "1M views first video!", name: "Hassan Z." },
+  { x: 55, y: 68, rotate: 2, scale: 0.98, zIndex: 1, color: "#E63E00", initials: "NK", stars: 5, text: "Income tripled in 90 days", name: "Nour K." },
+  { x: 80, y: 55, rotate: -1, scale: 1.02, zIndex: 4, color: "#FF4D00", initials: "AC", stars: 5, text: "Agency at 24 years old", name: "Aisha C." },
+];
 
-const coaches = [
-  { name: 'Eric', followers: '600K', platform: 'TikTok' },
-  { name: 'Eileen', followers: '130K', platform: 'YouTube' },
-  { name: 'Nick', followers: '250K', platform: 'TikTok' },
-  { name: 'Andrew', followers: '5M', platform: 'Instagram' },
-  { name: 'Hershy', followers: '200K', platform: 'TikTok' },
-  { name: 'Sam', followers: '600K', platform: 'YouTube' },
-  { name: 'Adriel', followers: '500K', platform: 'TikTok' },
-  { name: 'Rudy', followers: 'CEO', platform: 'Founder' },
-]
+const stats = [
+  { number: "47,200+", label: "Active Members", icon: "/images/new1.png" },
+  { number: "$2.8M+", label: "Total Paid Out", icon: "/images/new2.png" },
+  { number: "500M+", label: "Views Generated", icon: "/images/new3.png" },
+  { number: "3,000+", label: "Verified Reviews", icon: "/images/new4.png" },
+];
 
-const videos = [
-  { title: '"I used AI to ace my finals"', views: '2.4M views', tag: 'Study tips' , videoUrl:'/images/vid1.mp4'},
-  { title: '"This app replaced my tutor"', views: '890K views', tag: 'Product demo' , videoUrl:'/images/vid2.mp4'},
-  { title: '"How I went from D to A in 3 weeks"', views: '1.7M views', tag: 'Story' , videoUrl:'/images/vid3.mp4'},
-  { title: '"AI homework hack every student needs"', views: '3.1M views', tag: 'Viral' , videoUrl:'/images/vid4.mp4'},
-]
+const socialLinks = [
+  { name: "TikTok", href: "#", path: "M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V9a8.27 8.27 0 0 0 4.83 1.54V7.1a4.85 4.85 0 0 1-1.06-.41z" },
+  { name: "Instagram", href: "#", path: "M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z" },
+  { name: "YouTube", href: "#", path: "M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" },
+  { name: "Twitter/X", href: "#", path: "M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" },
+];
 
-const testi = [
-  { name: 'Fatima A.', text: 'I had zero content experience. TNT gave me the system and coaching to hit 300K followers in 60 days. The pay is real - do not sleep on this.', stars: 5 },
-  { name: 'Jordan K.', text: 'Made $12K in my second month. The viral format library alone is worth 10x what other programs charge.', stars: 5 },
-  { name: 'Priya M.', text: 'Working directly with the founders was something I never expected. Got a full-time offer after 3 months.', stars: 5 },
-]
+/* ─── SCROLL REVEAL HOOK ─────────────────────────────────── */
+function useScrollReveal() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold: 0.15 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return { ref, visible };
+}
 
-/* ─── COMPONENT ─────────────────────────────────────────── */
-
-export default function Home() {
+function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  const { ref, visible } = useScrollReveal();
   return (
-    <main className="min-h-screen bg-white">
-      <Navbar />
+    <div ref={ref} style={{
+      opacity: visible ? 1 : 0,
+      transform: visible ? "translateY(0)" : "translateY(32px)",
+      transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
+    }}>
+      {children}
+    </div>
+  );
+}
 
-      {/* ── HERO (Blue Mode Animated) ── */}
-      <section className="relative flex flex-col items-center justify-center text-center px-6 pt-36 pb-24 overflow-hidden min-h-screen bg-white">
-        
-        {/* Animated Background Orbs (Blue Palette) */}
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <div className="absolute top-1/4 -left-10 w-[500px] h-[500px] rounded-full blur-[120px] opacity-10 animate-blob"
-            style={{ background: '#3B82F6' }} />
-          <div className="absolute bottom-1/4 -right-10 w-[400px] h-[400px] rounded-full blur-[100px] opacity-[0.07] animate-blob animation-delay-2000"
-            style={{ background: '#60A5FA' }} />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[140px] opacity-[0.05] animate-blob animation-delay-4000"
-            style={{ background: '#2563EB' }} />
+/* ─── ANIMATED COUNTER ───────────────────────────────────── */
+function Counter({ target, suffix = "" }: { target: string; suffix?: string }) {
+  const { ref, visible } = useScrollReveal();
+  return <span ref={ref}>{visible ? target : "0"}{suffix}</span>;
+}
 
-          {/* Light Grid Overlay */}
-          <div className="absolute inset-0 opacity-[0.05]" 
-            style={{ backgroundImage: `linear-gradient(#ddd 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)`, backgroundSize: '50px 50px' }} />
+/* ─── TICKER ─────────────────────────────────────────────── */
+const tickerItems = ["💰 $2.8M+ Paid Out", "⚡ 500M+ Views", "👥 47,200 Members", "🔥 3,000+ Reviews", "🚀 Top Creator Earned $22K/Month", "⭐ Join Today", "💰 $2.8M+ Paid Out", "⚡ 500M+ Views", "👥 47,200 Members", "🔥 3,000+ Reviews", "🚀 Top Creator Earned $22K/Month", "⭐ Join Today"];
+
+/* ─── BAR CHART ──────────────────────────────────────────── */
+const chartData = [
+  { month: "Oct", value: 180 },
+  { month: "Nov", value: 310 },
+  { month: "Dec", value: 420 },
+  { month: "Jan", value: 580 },
+  { month: "Feb", value: 720 },
+  { month: "Mar", value: 940 },
+  { month: "Apr", value: 1120 },
+];
+// const maxVal = Math.max(...chartData.map(d => d.value));
+const maxVal = Math.max(...chartData.map(d => d.value), 1); 
+
+/* ─── PAGE COMPONENT ─────────────────────────────────────── */
+export default function CreatorLanding() {
+  const [memberCount] = useState(47284);
+  const [payments] = useState(2841200);
+
+  return (
+    <main style={{ background: "#FFFFFF", color: "#0A0A0A", fontFamily: "'Poppins', sans-serif", overflowX: "hidden" }}>
+
+      {/* ── NAVBAR ── */}
+      <nav style={{
+        position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
+        background: "rgba(255,255,255,0.95)", backdropFilter: "blur(12px)",
+        borderBottom: "1px solid rgba(255,77,0,0.1)",
+        padding: "0 2rem", height: "68px",
+        display: "flex", alignItems: "center", justifyContent: "space-between"
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <Link href="/" className="font-display font-black text-2xl tracking-tight shrink-0">
+            <img 
+              src="/images/logo.png" 
+              alt="TNT" 
+              width={100} 
+              height={100} 
+              style={{ 
+                borderRadius: '8px', 
+                filter: 'brightness(0)' 
+              }} 
+            />
+          </Link>
         </div>
+        <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+          <Link
+            href="become-creator"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-blue-200"
+            style={{
+              background: "#FF4D00", color: "#fff",
+              padding: "10px 22px", borderRadius: 50,
+              fontWeight: 700, fontSize: "0.85rem",
+              textDecoration: "none", transition: "all 0.2s",
+              boxShadow: "0 4px 14px rgba(255,77,0,0.3)"
+            }}
+          >
+            Become a Creator →
+          </Link>
+        </div>
+      </nav>
 
-        <div className="relative z-10 max-w-7xl mx-auto">
-          <ScrollReveal>
-            <span className="inline-block px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase mb-6"
-              style={{ background: 'rgba(59,130,246,0.1)', color: '#2563EB', border: '1px solid rgba(59,130,246,0.2)' }}>
-              Hiring Marketing Interns
+      {/* ── TICKER ── */}
+      <div style={{
+        marginTop: 68, background: "#FF4D00", padding: "10px 0",
+        overflow: "hidden", whiteSpace: "nowrap"
+      }}>
+        <div style={{
+          display: "inline-flex", gap: "3rem",
+          animation: "ticker 28s linear infinite"
+        }}>
+          {tickerItems.map((item, i) => (
+            <span key={i} style={{ color: "#fff", fontWeight: 700, fontSize: "0.82rem", letterSpacing: "0.04em", textTransform: "uppercase" }}>
+              {item}
             </span>
+          ))}
+        </div>
+      </div>
 
-            <h1 className="font-display font-black leading-tight mb-6 text-slate-900"
-              style={{ fontSize: 'clamp(3.5rem, 8vw, 5.5rem)' }}>
-              Turn Your Content Into a<br />
-              <span className="text-blue-600 animate-pulse">Viral Growth Machine.</span>
-            </h1>
+      {/* ── HERO ── */}
+      <section style={{
+        minHeight: "92vh", display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center", textAlign: "center",
+        padding: "5rem 1.5rem 4rem", position: "relative", overflow: "hidden",
+        background: "#FFFFFF"
+      }}>
+        {/* Orange blobs */}
+        <div style={{ position: "absolute", top: "10%", left: "-100px", width: 500, height: 500, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,77,0,0.12) 0%, transparent 70%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: "5%", right: "-80px", width: 400, height: 400, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,77,0,0.08) 0%, transparent 70%)", pointerEvents: "none" }} />
 
-            <p className="max-w-xl mx-auto text-lg mb-10 text-slate-600 font-medium leading-relaxed">
-              We don't just edit videos; we engineer retention.{' '}
-              <span className="text-blue-700 font-bold">Scale your personal brand on TikTok, Reels, and Shorts </span>with world-class editing and data-driven strategy.
-            </p>
+        {/* Grid overlay */}
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,77,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,77,0,0.04) 1px, transparent 1px)", backgroundSize: "60px 60px", pointerEvents: "none" }} />
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/apply"
-                className="px-10 py-4 rounded-full text-base font-bold transition-all duration-300 hover:scale-105 hover:shadow-[0_20px_40px_rgba(59,130,246,0.25)]"
-                style={{ background: '#3B82F6', color: '#fff' }}>
-                Apply Today →
-              </Link>
-              <a href="#the-job"
-                className="px-10 py-4 rounded-full text-base font-semibold transition-all duration-300 hover:bg-slate-50"
-                style={{ background: '#fff', color: '#1e293b', border: '1px solid #e2e8f0' }}>
-                Learn More
-              </a>
+        <div style={{ position: "relative", zIndex: 2, maxWidth: 900 }}>
+          <Reveal>
+            <div style={{
+              display: "inline-flex", alignItems: "center", gap: "0.5rem",
+              background: "rgba(255,77,0,0.08)", border: "1px solid rgba(255,77,0,0.2)",
+              borderRadius: 50, padding: "8px 20px", marginBottom: "1.5rem"
+            }}>
+              <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#FF4D00", display: "inline-block", animation: "pulse 2s infinite" }} />
+              <span style={{ color: "#FF4D00", fontWeight: 700, fontSize: "0.78rem", letterSpacing: "0.1em", textTransform: "uppercase" }}>Open — Join 47,000+ Creators</span>
             </div>
 
-            {/* Stats Bar */}
-            <div className="flex flex-wrap justify-center gap-12 mt-24 pt-10"
-              style={{ borderTop: '1px solid #f1f5f9' }}>
-              {[['500M+', 'Views Generated'], ['$20K', 'Top Monthly Earn'], ['300+', 'Active Creators']].map(([num, label]) => (
-                <div key={label} className="text-center group">
-                  <p className="font-display font-black text-4xl mb-1 text-blue-600 transition-transform group-hover:-translate-y-1">{num}</p>
-                  <p className="text-sm font-bold text-slate-400 uppercase tracking-wide">{label}</p>
+            <h1 style={{
+              fontSize: "clamp(3rem, 7vw, 5.5rem)", fontWeight: 900,
+              lineHeight: 1.05, color: "#0A0A0A", marginBottom: "1.5rem",
+              letterSpacing: "-2px"
+            }}>
+              The Internet's Most<br />
+              <span style={{
+                color: "#FF4D00",
+                background: "linear-gradient(135deg, #FF4D00, #FF6B35)",
+                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent"
+              }}>Rewarding Creator</span><br />
+              Network.
+            </h1>
+
+            <p style={{
+              maxWidth: 560, margin: "0 auto 2.5rem",
+              fontSize: "1.15rem", color: "#555", lineHeight: 1.7, fontWeight: 400
+            }}>
+              Join the TNT Creator community. Get paid to post, access viral blueprints,
+              and connect with <strong style={{ color: "#0A0A0A" }}>47,000+ creators</strong> already changing their lives.
+            </p>
+
+            <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
+              <a
+                href="become-creator"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-blue-200"
+                style={{
+                  background: "#FF4D00",
+                  color: "#fff",
+                  padding: "18px 44px",
+                  borderRadius: 50,
+                  fontWeight: 700, fontSize: "1.05rem",
+                  textDecoration: "none",
+                  boxShadow: "0 8px 32px rgba(255,77,0,0.35)",
+                  transition: "all 0.25s",
+                  display: "inline-block",
+                  letterSpacing: "-0.3px"
+                }}
+              >
+                Become a Creator →
+              </a>
+              <a
+                href="#telegram"
+                style={{
+                  background: "#fff",
+                  color: "#0A0A0A",
+                  padding: "18px 44px",
+                  borderRadius: 50,
+                  fontWeight: 700, fontSize: "1.05rem",
+                  textDecoration: "none",
+                  border: "2px solid #e5e5e5",
+                  transition: "all 0.25s"
+                }}
+              >
+                Join Telegram
+              </a>
+            </div>
+          </Reveal>
+
+          {/* Social proof row */}
+          <Reveal delay={200}>
+            <div style={{
+              display: "flex", justifyContent: "center", gap: "2.5rem",
+              marginTop: "4rem", paddingTop: "2.5rem",
+              borderTop: "1px solid #f0f0f0", flexWrap: "wrap"
+            }}>
+              {stats.map((s) => (
+                <div key={s.label} style={{ textAlign: "center" }}>
+                  <div style={{ marginBottom: "0.25rem" }}>
+                    <img 
+                      src={s.icon} 
+                      alt='TNT' 
+                      width={22} 
+                      height={22} 
+                      style={{ display: "block", margin: "0 auto" }} 
+                    />
+                  </div>
+                  <div style={{ fontWeight: 900, fontSize: "1.8rem", color: "#1a1a1a", letterSpacing: "-1px" }}>
+                    {s.number}
+                  </div>
+                  <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "#888", textTransform: "uppercase", letterSpacing: "0.08em" }}>{s.label}</div>
                 </div>
               ))}
             </div>
-          </ScrollReveal>
+          </Reveal>
         </div>
       </section>
 
-      {/* ── TICKER (Blue) ── */}
-      <div className="py-4 overflow-hidden" style={{ background: '#3B82F6' }}>
-        <div className="ticker-wrapper">
-          <div className="ticker-inner">
-            {Array(8).fill('TNT CREATOR PROGRAM · GET PAID · GO VIRAL · LEARN FROM INFLUENCERS · ').join('').split('·').map((t, i) => (
-              <span key={i} className="font-display font-bold text-sm tracking-widest uppercase px-6 text-white">
-                {t.trim()} {i % 4 !== 3 && <span className="mx-3 opacity-50">·</span>}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ── THE JOB (White/Blue) ── */}
-      <section id="the-job" className="py-28 px-6 md:px-16 max-w-7xl mx-auto bg-white">
-        <ScrollReveal>
-          <p className="text-xs font-bold tracking-widest uppercase mb-4 text-blue-600">You Create. We Dominate.</p>
-          <h2 className="font-display font-black text-5xl md:text-6xl mb-16 text-slate-900">
-            The Job
-          </h2>
-        </ScrollReveal>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          {jobPerks.map((p, i) => (
-            <ScrollReveal key={p.title} delay={i * 150}>
-              <div className="rounded-3xl p-8 h-full transition-all hover:shadow-xl border border-slate-100 bg-slate-100/100">
-                <span className="mb-6 block bg-blue-500 w-16 h-16 rounded-2xl flex items-center justify-center">
-                  <img src={p.icon} alt='TNT' width={32} height={32} />
-                </span>
-                <h3 className="font-display font-bold text-xl mb-3 text-slate-900">{p.title}</h3>
-                <p className="text-sm leading-relaxed text-slate-500 font-medium">{p.desc}</p>
-              </div>
-            </ScrollReveal>
-          ))}
-        </div>
-      </section>
-
-      {/* ── OUR INTERNS ── */}
-      <section id="interns" className="py-28 px-6 md:px-16 bg-slate-50">
-        <div className="max-w-7xl mx-auto">
-          <ScrollReveal>
-            <p className="text-xs font-bold tracking-widest uppercase mb-4 text-blue-600">Real Results</p>
-            <h2 className="font-display font-black text-5xl md:text-6xl mb-4 text-slate-900">
-              Our Interns
-            </h2>
-            <p className="text-lg mb-16 max-w-xl text-slate-500 font-medium">
-              Join the ranks of creators who have mastered the algorithm.
-            </p>
-          </ScrollReveal>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {interns.map((intern, i) => (
-              <ScrollReveal key={intern.name} delay={i * 150}>
-                <div className="relative overflow-hidden rounded-3xl h-[600px] group shadow-lg border border-slate-200">
-                  <img 
-                    src={intern.img} 
-                    alt={intern.name} 
-                    className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-                  <div className="absolute bottom-0 left-0 right-0 p-8 flex flex-col gap-3">
-                    <span className="inline-block px-3 py-1 rounded-full text-xs font-bold self-start"
-                      style={{ background: intern.color, color: '#fff' }}>
-                      {intern.tag}
-                    </span>
-                    <h3 className="font-display font-bold text-3xl text-white">Meet {intern.name}</h3>
-                    <p className="text-sm leading-relaxed text-slate-200 line-clamp-3">{intern.outcome}</p>
-                  </div>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── WHY TNT ── */}
-      <section id="why-tnt" className="py-28 px-6 md:px-16 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <ScrollReveal>
-            <p className="text-xs font-bold tracking-widest uppercase mb-4 text-blue-600">Perks</p>
-            <h2 className="font-display font-black text-5xl md:text-6xl mb-16 text-slate-900">
-              Why TNT?
-            </h2>
-          </ScrollReveal>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {whyItems.map((item, i) => (
-              <ScrollReveal key={item.title} delay={i * 100}>
-                <div className="flex gap-5 rounded-2xl p-6 h-full border border-slate-100 bg-slate-100/100 hover:border-blue-200 transition-colors">
-                  <span className="shrink-0"><img src={item.emoji} alt={item.title} width={32} height={32} /></span>
-                  <div>
-                    <h3 className="font-bold text-slate-900 mb-1">{item.title}</h3>
-                    <p className="text-sm leading-relaxed text-slate-500 font-medium">{item.desc}</p>
-                  </div>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
-      {/* ── PRODUCT ── */}
-      <section id="product" className="py-28 px-6 md:px-16"
-        style={{ background: 'rgba(59, 131, 246, 0.08)' }}> {/* Subtle blue tint background */}
-        <div className="max-w-7xl mx-auto">
-          <ScrollReveal>
-            <p className="text-xs font-semibold tracking-widest uppercase mb-4" 
-              style={{ color: '#3B82F6' }}> {/* Primary Blue Accent */}
-              What We Build
-            </p>
-            <h2 className="font-display font-black text-5xl md:text-6xl mb-4" 
-                style={{ color: '#1a1a1a' }}> {/* Pure white for contrast */}
-              What Our Product<br />Actually Does
-            </h2>
-            <p className="text-lg mb-16 max-w-xl" 
-              style={{ color: 'rgba(37, 37, 37, 0.6)' }}> {/* Muted white/blue text */}
-              TNT is an AI-powered learning platform that makes studying fast, fun, and actually effective.
-            </p>
-          </ScrollReveal>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {productPoints.map((p, i) => (
-              <ScrollReveal key={p.n} delay={i * 120}>
-                <div className="card-glow rounded-2xl p-8 transition-all duration-300 hover:border-blue-500/50"
-                  style={{ 
-                    background: 'rgba(59, 130, 246, 0.04)', 
-                    border: '1px solid rgba(59, 130, 246, 0.15)' 
-                  }}>
-                  {/* Transparent Blue Number */}
-                  <span className="font-display font-black text-5xl mb-4 block" 
-                        style={{ color: 'rgba(59, 131, 246, 0.42)' }}>
-                    {p.n}
-                  </span>
-                  <h3 className="font-display font-bold text-xl mb-3" 
-                      style={{ color: '#252525' }}>
-                    {p.title}
-                  </h3>
-                  <p className="text-sm leading-relaxed" 
-                    style={{ color: 'rgba(29, 29, 29, 0.5)' }}>
-                    {p.body}
-                  </p>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
-      {/* ── COACHES ── */}
-      <section id="coaches" className="py-28" style={{ background: '#f8fafc' }}> {/* Slightly cleaner light blue-gray background */}
-        <div className="max-w-7xl mx-auto">
-          <div className="px-6 md:px-16 max-w-7xl mx-auto mb-14">
-            <ScrollReveal>
-              <p className="text-xs font-bold tracking-widest uppercase mb-4" style={{ color: '#3B82F6' }}>
-                Coaching
-              </p>
-              <h2 className="font-display font-black text-5xl md:text-6xl mb-4" style={{ color: '#0f172a' }}>
-                Content Coaches
+      {/* ── TELEGRAM FUNNELS ── */}
+      <section id="telegram" style={{ padding: "7rem 1.5rem", background: "#FAFAFA" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <Reveal>
+            <div style={{ textAlign: "center", marginBottom: "4rem" }}>
+              <p style={{ color: "#FF4D00", fontWeight: 700, fontSize: "0.8rem", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "0.75rem" }}>Community Hub</p>
+              <h2 style={{ fontWeight: 900, fontSize: "clamp(2.2rem, 5vw, 3.5rem)", color: "#0A0A0A", letterSpacing: "-1.5px", lineHeight: 1.1, marginBottom: "1.25rem" }}>
+                Our Telegram is<br />Where Winners Live
               </h2>
-              <p className="text-lg max-w-lg font-medium" style={{ color: '#64748b' }}>
-                Work with influencers to learn virality and improve as a creator.
+              <p style={{ color: "#666", fontSize: "1.05rem", maxWidth: 520, margin: "0 auto" }}>
+                Real-time drops, collab requests, and a 47K+ creator community — all in one channel.
               </p>
-            </ScrollReveal>
-          </div>
-        </div>
-
-        {/* Infinite scroll row */}
-        <div className="relative overflow-hidden">
-          <div className="coaches-scroll flex gap-6">
-            {[...coaches, ...coaches].map((c, i) => (
-              <div key={i} className="shrink-0 w-52 rounded-3xl p-8 text-center transition-all border border-blue-100 bg-white shadow-sm hover:shadow-md">
-                <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center font-display font-black text-2xl shadow-inner"
-                  style={{ 
-                    // Generates different shades of professional blues
-                    background: `hsl(${210 + (i % 4) * 15}, 70%, 90%)`, 
-                    color: '#2563EB' 
-                  }}>
-                  {c.name[0]}
-                </div>
-                <p className="font-bold text-lg mb-1 text-slate-900">{c.name}</p>
-                <p className="text-xs font-black mb-1 uppercase tracking-wider" style={{ color: '#3B82F6' }}>
-                  {c.followers} Followers
-                </p>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-tighter">{c.platform}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      {/* ── EXAMPLE VIDEOS ── */}
-      <section id="videos" className="py-28 px-6 md:px-16" style={{ background: 'rgba(59, 131, 246, 0.08)' }}>
-        <div className="max-w-7xl mx-auto">
-          <ScrollReveal>
-            <p className="text-xs font-bold tracking-widest uppercase mb-4 text-blue-600">Proof of Work</p>
-            <h2 className="font-display font-black text-5xl md:text-6xl mb-16 text-slate-900">Example Videos</h2>
-          </ScrollReveal>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {videos.map((v, i) => (
-              <ScrollReveal key={v.title} delay={i * 100}>
-                <div className="rounded-2xl overflow-hidden group flex flex-col bg-white border h-full border-slate-200 shadow-sm">
-                  <div className="relative w-full aspect-[9/16] bg-black">
-                    <video 
-                      src={v.videoUrl} 
-                      className="w-full h-full object-cover" 
-                      autoPlay 
-                      muted 
-                      loop 
-                      playsInline 
-                      preload="metadata" 
-                    />
-                    <span className="absolute top-3 left-3 px-2 py-1 rounded-md text-xs font-bold bg-blue-500 text-white z-10">{v.tag}</span>
-                  </div>
-                  <div className="py-4 px-4">
-                    <p className="text-sm font-bold text-slate-800">{v.title}</p>
-                    <p className="text-xs font-bold text-blue-600 mt-1 uppercase">{v.views}</p>
-                  </div>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── REFERRALS ── */}
-      
-
-      <section id="referrals" className="py-28 px-6 md:px-16 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <ScrollReveal>
-            {/* Container to hold text and button */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
-              
-              {/* Text Side */}
-              <div>
-                <p className="text-xs font-bold tracking-widest uppercase mb-4 text-blue-600">
-                  Testimonials
-                </p>
-                <h2 className="font-display font-black text-5xl md:text-6xl text-slate-900 leading-tight">
-                  Referrals
-                </h2>
-              </div>
-
-              {/* Button Side */}
-              <div className="pb-2"> {/* Bottom padding to align with the baseline of the large text */}
-                <a 
-                  href="#join-referral" 
-                  className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full transition-all duration-200 shadow-lg hover:shadow-blue-200/50"
-                >
-                  Refer Friend
-                </a>
-              </div>
-
             </div>
-          </ScrollReveal>
+          </Reveal>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {testi.map((r, i) => (
-              <ScrollReveal key={r.name} delay={i * 150}>
-                <div className="rounded-3xl p-8 h-full flex flex-col border border-slate-100 bg-slate-50/50">
-                  <div className="flex mb-4 text-blue-500">
-                    {Array(r.stars).fill(0).map((_, si) => <span key={si} className="text-lg">★</span>)}
-                  </div>
-                  <p className="text-base font-medium leading-relaxed italic text-slate-700 flex-1 mb-8">"{r.text}"</p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-blue-500 text-white">
-                      {r.name[0]}
-                    </div>
-                    <span className="font-bold text-slate-900">{r.name}</span>
-                  </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1.5rem", marginBottom: "3rem" }}>
+            {telegramPerks.map((p, i) => (
+              <Reveal key={p.title} delay={i * 80}>
+                <div style={{
+                  background: "#fff", border: "1.5px solid #F0F0F0",
+                  borderRadius: 20, padding: "2rem",
+                  transition: "all 0.3s",
+                  cursor: "default"
+                }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLDivElement).style.boxShadow = "0 8px 40px rgba(255,77,0,0.12)";
+                    (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(255,77,0,0.3)";
+                    (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px)";
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLDivElement).style.boxShadow = "none";
+                    (e.currentTarget as HTMLDivElement).style.borderColor = "#F0F0F0";
+                    (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
+                  }}
+                >
+                  <div style={{ fontSize: "2rem", marginBottom: "1rem" }}><img src={p.icon} alt='TNT' width={32} height={32} /></div>
+                  <h3 style={{ fontWeight: 800, fontSize: "1rem", color: "#0A0A0A", marginBottom: "0.5rem" }}>{p.title}</h3>
+                  <p style={{ color: "#777", fontSize: "0.9rem", lineHeight: 1.6 }}>{p.desc}</p>
                 </div>
-              </ScrollReveal>
+              </Reveal>
             ))}
           </div>
-          
+
+          <Reveal delay={200}>
+            <div style={{ textAlign: "center" }}>
+              <a
+                href="https://t.me/tntcreators"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: "0.75rem",
+                  background: "#FF4D00", color: "#fff",
+                  padding: "18px 48px", borderRadius: 50,
+                  fontWeight: 800, fontSize: "1rem",
+                  textDecoration: "none",
+                  boxShadow: "0 8px 32px rgba(255,77,0,0.3)"
+                }}
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z" fill="white" />
+                </svg>
+                Join Our Telegram Channel
+              </a>
+              <p style={{ color: "#999", fontSize: "0.82rem", marginTop: "1rem", fontWeight: 500 }}>
+                47,284 members • Free to join
+              </p>
+            </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* ── CTA BANNER (Blue Gradient) ── */}
-      <div className="bg-white pb-16">
-        <section className="py-24 px-6 mx-6 md:mx-16 rounded-[40px] text-center relative overflow-hidden shadow-2xl"
-          style={{ background: 'linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%)' }}>
-          <div className="relative z-10">
-            <h2 className="font-display font-black text-4xl md:text-6xl mb-6 text-white">Ready to go viral?</h2>
-            <p className="text-lg mb-10 max-w-md mx-auto text-blue-100 font-medium opacity-80">
-              Applications are reviewed on a rolling basis. Limited spots available.
-            </p>
-            <Link href="/apply"
-              className="inline-flex items-center gap-2 px-10 py-4 rounded-full text-base font-bold transition-all bg-white text-blue-900 hover:scale-105 hover:shadow-2xl">
-              Apply Now →
-            </Link>
-          </div>
-        </section>
-      </div>
+      {/* ── STATS & GRAPHS ── */}
+      <section id="stats" style={{ padding: "7rem 1.5rem", background: "#FFFFFF" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <Reveal>
+            <div style={{ textAlign: "center", marginBottom: "4rem" }}>
+              <p style={{ color: "#FF4D00", fontWeight: 700, fontSize: "0.8rem", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "0.75rem" }}>Real Numbers</p>
+              <h2 style={{ fontWeight: 900, fontSize: "clamp(2.2rem, 5vw, 3.5rem)", color: "#0A0A0A", letterSpacing: "-1.5px" }}>
+                Growth That Speaks for Itself
+              </h2>
+            </div>
+          </Reveal>
 
-      {/* ── FOOTER ── */}
-      <footer className="px-6 md:px-16 py-12 bg-white border-t border-slate-100">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <img src="/images/logo.png" alt="TNT" width={80} style={{ filter: 'grayscale(1) brightness(0.2)' }} />
-          
-          <div className="flex items-center gap-5">
-            {[
-              { name: 'TikTok', href: '#', path: 'M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V9a8.27 8.27 0 0 0 4.83 1.54V7.1a4.85 4.85 0 0 1-1.06-.41z' },
-              { name: 'Instagram', href: '#', path: 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z' },
-              { name: 'YouTube', href: '#', path: 'M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z' },
-              { name: 'Twitter', href: '#', path: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' },
-            ].map(s => (
-              <a key={s.name} href={s.href} aria-label={s.name}
-                className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
-                style={{  background: 'linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%)' }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path d={s.path} fill="rgb(255, 255, 255)" />
-                </svg>
-              </a>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem" }}>
+            {/* Bar Chart */}
+            <Reveal>
+              <div style={{ background: "#FAFAFA", borderRadius: 24, padding: "2rem", border: "1.5px solid #F0F0F0" }}>
+                <p style={{ fontWeight: 800, fontSize: "1rem", color: "#0A0A0A", marginBottom: "0.25rem" }}>Monthly Creator Earnings ($K)</p>
+                <p style={{ color: "#999", fontSize: "0.82rem", marginBottom: "2rem" }}>Oct 2024 – Apr 2025</p>
+                
+                {/* 1. Ensure this container is flex and has a height */}
+                <div style={{ display: "flex", alignItems: "flex-end", gap: "0.5rem", height: 200 }}>
+                  {chartData.map((d, i) => (
+                    <div 
+                      key={d.month} 
+                      style={{ 
+                        flex: 1, 
+                        display: "flex", 
+                        flexDirection: "column", 
+                        alignItems: "center", 
+                        gap: "0.5rem", 
+                        height: "100%" // 2. MANDATORY: The column must fill the 200px height
+                      }}
+                    >
+                      <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#FF4D00" }}>${d.value}</span>
+                      
+                      {/* 3. Wrap the bar in a container that grows to fill available space */}
+                      <div style={{ flex: 1, width: "100%", display: "flex", alignItems: "flex-end" }}>
+                        <div style={{
+                          width: "100%", 
+                          borderRadius: "6px 6px 0 0",
+                          background: i === chartData.length - 1
+                            ? "linear-gradient(180deg, #FF4D00, #FF6B35)"
+                            : "rgba(255,77,0,0.15)",
+                          height: `${(d.value / maxVal) * 100}%`, // This now has a parent height to calculate from
+                          transition: "all 0.3s"
+                        }} />
+                      </div>
+                      
+                      <span style={{ fontSize: "0.68rem", color: "#999", fontWeight: 600 }}>{d.month}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Reveal>
+
+            {/* Top Groups Table */}
+            <Reveal delay={100}>
+              <div style={{ background: "#FAFAFA", borderRadius: 24, padding: "2rem", border: "1.5px solid #F0F0F0" }}>
+                <p style={{ fontWeight: 800, fontSize: "1rem", color: "#0A0A0A", marginBottom: "0.25rem" }}>Top Performing Groups</p>
+                <p style={{ color: "#999", fontSize: "0.82rem", marginBottom: "1.5rem" }}>This month's leaderboard</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                  {topGroups.map((g) => (
+                    <div key={g.rank} style={{
+                      display: "flex", alignItems: "center", gap: "1rem",
+                      padding: "0.75rem 1rem", background: "#fff",
+                      borderRadius: 12, border: "1px solid #F0F0F0"
+                    }}>
+                      <div style={{
+                        width: 28, height: 28, borderRadius: 8,
+                        background: g.rank === 1 ? "#FF4D00" : g.rank === 2 ? "#FF6B35" : "#FFE0D6",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        fontWeight: 700, fontSize: "0.78rem",
+                        color: g.rank <= 2 ? "#fff" : "#FF4D00", flexShrink: 0
+                      }}>#{g.rank}</div>
+                      <div style={{ flex: 1 }}>
+                        <p style={{ fontWeight: 700, fontSize: "0.88rem", color: "#0A0A0A" }}>{g.name}</p>
+                        <p style={{ fontSize: "0.75rem", color: "#999" }}>{g.members.toLocaleString()} members</p>
+                      </div>
+                      <div style={{ textAlign: "right" }}>
+                        <p style={{ fontWeight: 700, fontSize: "0.88rem", color: "#FF4D00" }}>{g.earnings}</p>
+                        <p style={{ fontSize: "0.72rem", color: "#22C55E", fontWeight: 700 }}>{g.growth}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CRAZY STORIES ── */}
+      <section style={{ padding: "7rem 1.5rem", background: "#FAFAFA" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <Reveal>
+            <div style={{ textAlign: "center", marginBottom: "4rem" }}>
+              <p style={{ color: "#FF4D00", fontWeight: 700, fontSize: "0.8rem", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "0.75rem" }}>Success Stories</p>
+              <h2 style={{ fontWeight: 900, fontSize: "clamp(2.2rem, 5vw, 3.5rem)", color: "#0A0A0A", letterSpacing: "-1.5px" }}>
+                Crazy Stories.<br />Real People.
+              </h2>
+            </div>
+          </Reveal>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.5rem" }}>
+            {crazyStories.map((s, i) => (
+              <Reveal key={s.handle} delay={i * 60}>
+                <div style={{
+                  background: "#fff", 
+                  borderRadius: 20,
+                  padding: "1.75rem", 
+                  border: "1.5px solid #F0F0F0",
+                  transition: "all 0.3s", 
+                  cursor: "default",
+                  position: "relative", // 1. Added relative positioning to parent
+                  overflow: "hidden"    // Optional: clips anything that goes out of bounds
+                }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLDivElement).style.boxShadow = "0 12px 48px rgba(255,77,0,0.1)";
+                    (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px)";
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLDivElement).style.boxShadow = "none";
+                    (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
+                  }}
+                >
+                  {/* 2. Moved Tag Here with Absolute Positioning */}
+                  <div style={{ 
+                    position: "absolute", 
+                    top: "1.5rem", 
+                    right: "1.5rem" 
+                  }}>
+                    <span style={{
+                      background: "rgba(255,77,0,0.08)", 
+                      color: "#FF4D00",
+                      padding: "4px 12px", 
+                      borderRadius: 20,
+                      fontSize: "0.72rem", 
+                      fontWeight: 700,
+                      whiteSpace: "nowrap" // 3. Prevents the tag from breaking into 2 lines
+                    }}>
+                      {s.tag}
+                    </span>
+                  </div>
+
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
+                    <div style={{
+                      width: 44, height: 44, borderRadius: "50%",
+                      background: "linear-gradient(135deg, #FF4D00, #FF6B35)",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      color: "#fff", fontWeight: 900, fontSize: "1rem"
+                    }}>{s.avatar}</div>
+                    <div>
+                      {/* 4. Added padding-right so text doesn't overlap the tag */}
+                      <p style={{ fontWeight: 800, fontSize: "0.95rem", color: "#0A0A0A", paddingRight: "4rem" }}>
+                        {s.handle}
+                      </p>
+                      <p style={{ fontSize: "0.78rem", color: "#FF4D00", fontWeight: 700 }}>
+                        {s.followers} followers
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <p style={{ color: "#555", fontSize: "0.9rem", lineHeight: 1.65 }}>{s.story}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── TESTIMONIALS FLOATING ── */}
+      <section style={{ padding: "7rem 1.5rem", background: "#FFFFFF", overflow: "hidden" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <Reveal>
+            <div style={{ textAlign: "center", marginBottom: "3rem" }}>
+              <p style={{ color: "#FF4D00", fontWeight: 700, fontSize: "0.8rem", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "0.75rem" }}>Social Proof</p>
+              <h2 style={{ fontWeight: 900, fontSize: "clamp(2.2rem, 5vw, 3.5rem)", color: "#0A0A0A", letterSpacing: "-1.5px" }}>
+                3,000+ Testimonials<br />
+                <span style={{ color: "#FF4D00" }}>& Live Reviews</span>
+              </h2>
+              <p style={{ color: "#888", marginTop: "1rem", fontSize: "1rem" }}>Screenshots flooding in every day from our creator community</p>
+            </div>
+          </Reveal>
+
+          {/* Floating testimonial cards */}
+          <div style={{ position: "relative", height: 500, marginBottom: "2rem" }}>
+            {testimonialImages.map((t, i) => (
+              <div
+                key={i}
+                style={{
+                  position: "absolute",
+                  left: `${t.x}%`,
+                  top: `${t.y}%`,
+                  transform: `rotate(${t.rotate}deg) scale(${t.scale})`,
+                  zIndex: t.zIndex,
+                  background: "#fff",
+                  border: "2px solid #F0F0F0",
+                  borderRadius: 16,
+                  padding: "1rem 1.25rem",
+                  width: 190,
+                  boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
+                  animation: `float${i % 3} ${4 + (i % 3)}s ease-in-out infinite`,
+                  animationDelay: `${i * 0.4}s`
+                }}
+              >
+                <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", marginBottom: "0.5rem" }}>
+                  <div style={{
+                    width: 30, height: 30, borderRadius: "50%",
+                    background: `linear-gradient(135deg, ${t.color}, #FF6B35)`,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    color: "#fff", fontWeight: 900, fontSize: "0.8rem", flexShrink: 0
+                  }}>{t.initials}</div>
+                  <div>
+                    <p style={{ fontWeight: 700, fontSize: "0.72rem", color: "#0A0A0A" }}>{t.name}</p>
+                    <div style={{ color: "#FF4D00", fontSize: "0.65rem" }}>{"★".repeat(t.stars)}</div>
+                  </div>
+                </div>
+                <p style={{ fontSize: "0.8rem", color: "#444", fontWeight: 600 }}>"{t.text}"</p>
+              </div>
             ))}
           </div>
 
-          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">© 2025 TNT. All rights reserved.</p>
+          <Reveal>
+            <div style={{ textAlign: "center", marginTop: "1rem" }}>
+              <span style={{
+                display: "inline-block",
+                background: "rgba(255,77,0,0.08)", border: "1px solid rgba(255,77,0,0.2)",
+                borderRadius: 50, padding: "10px 24px",
+                color: "#FF4D00", fontWeight: 700, fontSize: "0.88rem"
+              }}>
+                🔥 New reviews coming in every hour
+              </span>
+            </div>
+          </Reveal>
         </div>
-      </footer>
+      </section>
+
+      {/* ── MEMBER COUNT + PAYMENTS ── */}
+      <section style={{ padding: "7rem 1.5rem", background: "#0A0A0A" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
+          <Reveal>
+            <p style={{ color: "rgba(255,77,0,0.8)", fontWeight: 700, fontSize: "0.8rem", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "1rem" }}>Live Counters</p>
+            <h2 style={{ fontWeight: 900, fontSize: "clamp(2rem, 5vw, 3rem)", color: "#FFFFFF", letterSpacing: "-1px", marginBottom: "3.5rem" }}>
+              The Numbers Don't Lie
+            </h2>
+          </Reveal>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem" }}>
+            <Reveal>
+              <div style={{
+                background: "rgba(255,77,0,0.06)", border: "1.5px solid rgba(255,77,0,0.2)",
+                borderRadius: 24, padding: "3rem 2rem"
+              }}>
+                <div style={{marginBottom: "0.75rem" }}>
+                  <img src="/images/new1.png" alt='TNT' width={42} height={42} style={{ display: "block", margin: "0 auto" }} />
+                </div>
+                <p style={{
+                  fontWeight: 700, fontSize: "clamp(2.5rem, 6vw, 4rem)",
+                  color: "#ffffff", letterSpacing: "-2px", lineHeight: 1
+                }}>
+                  {memberCount.toLocaleString()}
+                </p>
+                <p style={{ color: "#888", fontSize: "0.88rem", fontWeight: 600, marginTop: "0.75rem", textTransform: "uppercase", letterSpacing: "0.1em" }}>Active Members</p>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", marginTop: "0.75rem" }}>
+                  <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#22C55E", display: "inline-block", animation: "pulse 1.5s infinite" }} />
+                  <span style={{ color: "#22C55E", fontSize: "0.78rem", fontWeight: 700 }}>Growing right now</span>
+                </div>
+              </div>
+            </Reveal>
+            <Reveal delay={100}>
+              <div style={{
+                background: "rgba(255,77,0,0.06)", border: "1.5px solid rgba(255,77,0,0.2)",
+                borderRadius: 24, padding: "3rem 2rem"
+              }}>
+                <div style={{marginBottom: "0.75rem" }}><img src="/images/new2.png" alt='TNT' width={42} height={42} style={{ display: "block", margin: "0 auto" }} /></div>
+                <p style={{
+                  fontWeight: 700, fontSize: "clamp(2.5rem, 6vw, 4rem)",
+                  color: "#ffffff", letterSpacing: "-2px", lineHeight: 1
+                }}>
+                  ${(payments / 1000000).toFixed(1)}M+
+                </p>
+                <p style={{ color: "#888", fontSize: "0.88rem", fontWeight: 600, marginTop: "0.75rem", textTransform: "uppercase", letterSpacing: "0.1em" }}>Total Paid to Creators</p>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", marginTop: "0.75rem" }}>
+                  <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#22C55E", display: "inline-block", animation: "pulse 1.5s infinite" }} />
+                  <span style={{ color: "#22C55E", fontSize: "0.78rem", fontWeight: 700 }}>Paid out daily</span>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+
+          {/* Additional mini stats */}
+          <Reveal delay={200}>
+            <div style={{ display: "flex", justifyContent: "center", gap: "3rem", marginTop: "3rem", flexWrap: "wrap" }}>
+              {[["500M+", "Total Views"], ["$20K", "Top Monthly Earn"], ["90 Days", "Avg to 100K Followers"]].map(([num, label]) => (
+                <div key={label} style={{ textAlign: "center" }}>
+                  <p style={{ fontWeight: 500, fontSize: "1.6rem", color: "#FFFFFF", letterSpacing: "-1px" }}>{num}</p>
+                  <p style={{ color: "#555", fontSize: "0.78rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", marginTop: "0.25rem" }}>{label}</p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ── FINAL CTA ── */}
+      <section style={{
+        padding: "7rem 1.5rem", background: "#FFFFFF", textAlign: "center"
+      }}>
+        <div style={{ maxWidth: 700, margin: "0 auto" }}>
+          <Reveal>
+            <div style={{
+              background: "linear-gradient(135deg, #FF4D00 0%, #FF6B35 100%)",
+              borderRadius: 32, padding: "4rem 2rem",
+              boxShadow: "0 24px 80px rgba(255,77,0,0.25)"
+            }}>
+              <h2 style={{
+                fontWeight: 900, fontSize: "clamp(2rem, 5vw, 3rem)",
+                color: "#fff", letterSpacing: "-1.5px", lineHeight: 1.1, marginBottom: "1rem"
+              }}>
+                Ready to Get Paid<br />for Your Content?
+              </h2>
+              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "1.05rem", marginBottom: "2rem", lineHeight: 1.6 }}>
+                Join 47,000+ creators already earning. Limited spots open.
+              </p>
+              <a
+                href="become-creator"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "inline-block",
+                  background: "#fff", color: "#FF4D00",
+                  padding: "18px 52px", borderRadius: 50,
+                  fontWeight: 900, fontSize: "1.05rem",
+                  textDecoration: "none",
+                  boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
+                  letterSpacing: "-0.3px"
+                }}
+              >
+                Become a Creator →
+              </a>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+    
     </main>
-  )
+  );
 }
