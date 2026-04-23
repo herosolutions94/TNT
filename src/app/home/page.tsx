@@ -18,7 +18,7 @@ import Image from "next/image";
 import { fetchPageData } from "@/lib/api";
 import { generatePageMetadata } from "@/lib/meta";
 import { resolveImageUrl } from "@/lib/image";
-import type { HomePageContent, HomePageSection } from "@/types/pages";
+import type { HomePageResponse, HomePageSection } from "@/types/pages";
 
 /** The Laravel endpoint slug for this page. */
 const PAGE_NAME = "home-page";
@@ -26,7 +26,7 @@ const PAGE_NAME = "home-page";
 /* ── SEO ──────────────────────────────────────────────────────────────────── */
 
 export async function generateMetadata(): Promise<Metadata> {
-  const data = await fetchPageData<HomePageContent, HomePageSection[]>(PAGE_NAME);
+  const data = await fetchPageData<HomePageResponse>(PAGE_NAME);
 
   // If the page doesn't exist, Next.js will render the notFound UI below,
   // but we still need to return something valid here.
@@ -38,7 +38,7 @@ export async function generateMetadata(): Promise<Metadata> {
 /* ── Page Component ───────────────────────────────────────────────────────── */
 
 export default async function HomePage() {
-  const data = await fetchPageData<HomePageContent, HomePageSection[]>(PAGE_NAME);
+  const data = await fetchPageData<HomePageResponse>(PAGE_NAME);
 
   // Trigger Next.js 404 page if Laravel returns null (404).
   if (!data) notFound();

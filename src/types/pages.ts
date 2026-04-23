@@ -3,6 +3,8 @@
  * Add a new interface here whenever you add a new Laravel page.
  */
 
+import type { PageMeta } from "@/lib/api";
+
 /* ── Shared ─────────────────────────────────────────────── */
 
 export interface SiteSettings {
@@ -196,4 +198,11 @@ export interface HomePageSection {
   title?: string;
   items?: HomePageSectionItem[];
   [key: string]: unknown;
+}
+
+export interface HomePageResponse {
+  content: HomePageContent;
+  sections?: HomePageSection[];
+  meta_desc: PageMeta;
+  site_settings?: Record<string, unknown>;
 }
