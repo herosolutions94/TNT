@@ -97,27 +97,27 @@ export async function fetchPageData<TPage = Record<string, unknown>>(
 ): Promise<TPage | null> {
   const url = `${BASE_URL}/api/${pageName}`;
 
-  const res = await fetch(url, {
-    headers: {
-      "Content-Type": "application/json",
-      lang: "eng",
-    },
-    // ISR: revalidate every 60 seconds.
-    // Set to 0 for no cache, remove for full static build-time caching.
-    next: { revalidate: 60 },
-  });
+  try {
+    const res = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        lang: "eng",
+      },
+      next: { revalidate: 60 },
+    });
 
-  if (res.status === 404) {
+    if (res.status === 404) return null;
+
+    if (!res.ok) {
+      console.error(`[fetchPageData] ${pageName}: ${res.status} ${res.statusText}`);
+      return null;
+    }
+
+    return res.json() as Promise<TPage>;
+  } catch (err) {
+    console.error(`[fetchPageData] ${pageName}: network error —`, err);
     return null;
   }
-
-  if (!res.ok) {
-    throw new Error(
-      `Failed to fetch page "${pageName}": ${res.status} ${res.statusText}`,
-    );
-  }
-
-  return res.json() as Promise<TPage>;
 }
 
 /* ── Form Submissions ─────────────────────────────────────────────────────── */
