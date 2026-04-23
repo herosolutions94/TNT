@@ -492,7 +492,7 @@ function InternCard({ intern, index = 0 }: { intern: Intern; index?: number }) {
           {intern.time_period}
         </span>
         <h3 className="font-display font-bold text-3xl text-white">
-          Meet {intern.name}
+          {intern.name}
         </h3>
         <p className="text-sm leading-relaxed text-slate-200 line-clamp-3">
           {intern.description}
