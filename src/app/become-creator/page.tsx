@@ -12,6 +12,7 @@ import { fetchPageData } from "@/lib/api";
 import { generatePageMetadata } from "@/lib/meta";
 import { resolveImageUrl } from "@/lib/image";
 import ScrollReveal from "@/components/ScrollReveal";
+import VideoCard from "@/components/VideoCard";
 import type {
   BecomeCreatorPageResponse,
   HomeJob,
@@ -603,32 +604,7 @@ function CoachCard({ coach, index }: { coach: Coach; index: number }) {
   );
 }
 
-function VideoCard({ video }: { video: WorkVideo }) {
-  return (
-    <div className="rounded-2xl overflow-hidden group flex flex-col bg-white border h-full border-slate-200 shadow-sm">
-      <div className="relative w-full aspect-[9/16] bg-black">
-        <video
-          src={resolveImageUrl(video.video, "work_videos")}
-          className="w-full h-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-        />
-        <span className="absolute top-3 left-3 px-2 py-1 rounded-md text-xs font-bold bg-blue-500 text-white z-10">
-          {video.type}
-        </span>
-      </div>
-      <div className="py-4 px-4">
-        <p className="text-sm font-bold text-slate-800">"{video.description}"</p>
-        <p className="text-xs font-bold text-blue-600 mt-1 uppercase">
-          {video.views}
-        </p>
-      </div>
-    </div>
-  );
-}
+
 
 function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   // ratings from API is 0 when not set — default to 5 stars in that case
