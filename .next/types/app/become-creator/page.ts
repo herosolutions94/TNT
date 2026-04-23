@@ -1,4 +1,4 @@
-// File: D:\TNT\src\app\become-creator\page.tsx
+// File: D:\tnt\src\app\become-creator\page.tsx
 import * as entry from '../../../../src/app/become-creator/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

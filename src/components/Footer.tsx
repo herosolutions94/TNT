@@ -89,7 +89,7 @@ export default function Footer({ siteSettings }: FooterProps) {
 
         {/* Copyright */}
         <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-          © {year} {siteName}. {copyright}.
+          © {year} TNT. {copyright}.
         </p>
       </div>
     </footer>
