@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import type { SiteSettings } from '@/lib/api'
 import { resolveStorageUrl } from '@/lib/api'
-
+import { usePathname } from "next/navigation";
 interface NavbarProps {
   siteSettings?: SiteSettings | null
 }
@@ -12,6 +12,8 @@ export default function Navbar({ siteSettings }: NavbarProps) {
   const [open, setOpen] = useState(false)
 
   const logoUrl = resolveStorageUrl(siteSettings?.site_logo)
+  const pathname = usePathname();
+  const isApplyPage = pathname === "/apply";
   const siteName = siteSettings?.site_name ?? 'TNT'
 
   return (
@@ -38,21 +40,26 @@ export default function Navbar({ siteSettings }: NavbarProps) {
           <span className="font-display font-black text-2xl tracking-tight">{siteName}</span>
         )}
       </Link>
+      {!isApplyPage && (
 
-      {/* Desktop nav links */}
-      <div
-        className="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-bold"
-        style={{ color: 'rgba(0, 0, 0, 0.6)' }}
-      >
-        <a href="#the-job"  className="hover:text-black transition-colors whitespace-nowrap">The Job</a>
-        <a href="#interns"  className="hover:text-black transition-colors whitespace-nowrap">Interns</a>
-        <a href="#why-tnt"  className="hover:text-black transition-colors whitespace-nowrap">Why TNT?</a>
-        <a href="#product"  className="hover:text-black transition-colors whitespace-nowrap">Product</a>
-        <a href="#coaches"  className="hover:text-black transition-colors whitespace-nowrap">Coaches</a>
-        <a href="#referrals" className="hover:text-black transition-colors whitespace-nowrap">Referrals</a>
-      </div>
 
-      {/* Desktop CTA */}
+        <div
+          className="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-bold"
+          style={{ color: 'rgba(0, 0, 0, 0.6)' }}
+        >
+          <a href="#the-job" className="hover:text-black transition-colors whitespace-nowrap">The Job</a>
+          <a href="#interns" className="hover:text-black transition-colors whitespace-nowrap">Interns</a>
+          <a href="#why-tnt" className="hover:text-black transition-colors whitespace-nowrap">Why TNT?</a>
+          <a href="#product" className="hover:text-black transition-colors whitespace-nowrap">Product</a>
+          <a href="#coaches" className="hover:text-black transition-colors whitespace-nowrap">Coaches</a>
+          <a href="#referrals" className="hover:text-black transition-colors whitespace-nowrap">Referrals</a>
+        </div>
+
+      )}
+
+
+
+      {!isApplyPage && (
       <Link
         href="/apply"
         className="hidden lg:inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-blue-200"
@@ -61,6 +68,8 @@ export default function Navbar({ siteSettings }: NavbarProps) {
         Apply Now →
       </Link>
 
+      )}
+
       {/* Mobile burger */}
       <button
         className="lg:hidden flex flex-col gap-1.5 p-2 z-50"
@@ -68,7 +77,7 @@ export default function Navbar({ siteSettings }: NavbarProps) {
         aria-label="Toggle menu"
       >
         <span className={`block w-6 h-0.5 transition-all ${open ? 'rotate-45 translate-y-2' : ''}`} style={{ background: '#000' }} />
-        <span className={`block w-6 h-0.5 transition-all ${open ? 'opacity-0' : ''}`}           style={{ background: '#000' }} />
+        <span className={`block w-6 h-0.5 transition-all ${open ? 'opacity-0' : ''}`} style={{ background: '#000' }} />
         <span className={`block w-6 h-0.5 transition-all ${open ? '-rotate-45 -translate-y-2' : ''}`} style={{ background: '#000' }} />
       </button>
 
