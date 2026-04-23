@@ -176,5 +176,24 @@ export interface HomePageContent {
   hero_subheading?: string;
   hero_cta_label?: string;
   hero_cta_url?: string;
+  stats_members?: string;
+  stats_paid_out?: string;
+  stats_views?: string;
+  stats_reviews?: string;
+  [key: string]: unknown;
+}
+
+export interface HomePageSectionItem {
+  id: number;
+  title?: string;
+  description?: string;
+  image?: string;
+  [key: string]: unknown;
+}
+
+export interface HomePageSection {
+  type: string;
+  title?: string;
+  items?: HomePageSectionItem[];
   [key: string]: unknown;
 }
