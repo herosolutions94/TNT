@@ -90,7 +90,7 @@ export default function ApplyPage() {
                       <label className="block text-xs font-bold uppercase tracking-wider mb-2"
                         style={{ color: textMuted }}>Phone Number</label>
                       <input name="phone" value={form.phone} onChange={handleChange}
-                        placeholder="+1 (555) 000-0000" 
+                        placeholder="+44 1234 567890" 
                         className="text-gray-700 w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all" />
                     </div>
                     <div>
