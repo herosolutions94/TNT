@@ -116,7 +116,7 @@ export default function ApplyPage() {
             <div className="grid sm:grid-cols-2 gap-5">
               <Field label="Phone Number">
                 <input name="phone" value={form.phone} onChange={handleChange}
-                  placeholder="+1 (555) 000-0000" className={inputCls} />
+                  placeholder="+44 1234 567890" className={inputCls} />
               </Field>
               <Field label="Availability *">
                 <select name="availability" value={form.availability} onChange={handleChange}
